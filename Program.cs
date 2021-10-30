@@ -1,24 +1,29 @@
 ﻿using System;
 using static System.Console;
-using System.Threading;
 
 namespace x_403_lovink_mark_Projet
 {
     class Program
     {
 
+        /// <summary>
+        /// Lovink Mark
+        /// 08.09.2021
+        /// ETML
+        /// Le problème du cavalier
+        /// </summary>
 
-         
+
         static void Main(string[] args)
 
         {
 
             const int topCursor = 10; // Constante de la position de la table de jeu depuis le haut.
-            const int leftCursor = 4; // Constante de la position de la table de jeu depuis la gauche.
-            int posLetter = leftCursor; // Placer les lettres avec une varibale modifiable.
-            int posNumber = topCursor; // Placer les chiffres avec une varibale modifiable.
-            int row = 6; // Nombres de lignes pour la table de jeu.
-            int column = 6; // Nombres de colonnes pour la table de jeu.
+            const int leftCursor = 5; // Constante de la position de la table de jeu depuis la gauche.
+            int posLeftLetNum = leftCursor; // Placer les lettres avec une varibale modifiable.
+            int posTopLetNum = topCursor; // Placer les chiffres avec une varibale modifiable.
+            int row = 8; // Nombres de lignes pour la table de jeu.
+            int column = 8; // Nombres de colonnes pour la table de jeu.
             int x = leftCursor + 2;
             int y = topCursor + 1;
             string horse = "■"; // Le cheval
@@ -28,7 +33,7 @@ namespace x_403_lovink_mark_Projet
             int possibilities = 0; // Nombre de cases non possible à jouer.
 
             char gameOn; // Valeur pour savoir si le joeur veut rejouer ou pas.
-
+            bool gameStart = true; // Les valeurs du tableau de jeu sont correctes? 
             bool lost = false; // Valeur pour savoir si je joueur à perdu.
             bool win = false; // Valeur pour savoir si je joueur à gagné.
             bool gameOver = true; // Valeur pour savoir si je joueur continue de jouer.
@@ -40,42 +45,48 @@ namespace x_403_lovink_mark_Projet
             ConsoleKeyInfo ckyKeyPress; // Valeur pour savoir sur quelle touche le joueur appuie.
 
 
-            
-
+            Title = "Le problème du cavalier"; // Titre de la console.
             do
             {
+
+
                 while (gameOver) // Pour afficher une fois la table de jeu quand il lance ou relance le jeu.
-            {
+                {
 
                     for (int i = 0; i < column; i++) // Attribuer une valeur de "3" dans tout le tableau à 2 dimensionss pour commencer ou l'on veut.
                     {
                         for (int j = 0; j < row; j++)
                         {
-                            tabsGames[i, j] = 3;
+                            tabsGames[j, i] = 3;
                         }
 
                     }
 
-                Titre(); // Affichage du titre.
+                    GameTitle(); // Affichage du titre.
 
-                Rules(leftCursor, topCursor, row); // Affichage des règles de jeu.
-
-
-                Tableau(row, column, topCursor, leftCursor); // Affichage du tableau de jeu.
+                    Rules(leftCursor, topCursor, row); // Affichage des règles de jeu.
 
 
-                SetCursorPosition(posLetter + 2, posNumber - 1);
+                    GameField(row, column, topCursor, leftCursor); // Affichage du tableau de jeu.
 
 
-                Alphabet(posLetter, posNumber, column, row, leftCursor, topCursor); // affichage des chiffres et lettres autour du tableau de jeu.
+                    SetCursorPosition(posLeftLetNum + 2, posTopLetNum - 1);
 
 
-                SetCursorPosition(x, y);
-                gameOver = false; // Pour coupé la boucle d'affichage.
-            }
+                    Alphabet(posLeftLetNum, posTopLetNum, column, row, leftCursor, topCursor); // affichage des chiffres et lettres autour du tableau de jeu.
 
 
+                    SetCursorPosition(x, y);
+                    gameOver = false; // Pour coupé la boucle d'affichage.
+                }
                 SetCursorPosition(intPosCol * 5 + x, intPosRow * 3 + y);
+
+                if (row < 8 || row > 20 || column < 8 || column > 26)// Si les valeurs du tableau de jeu n'est pas adéquat le jeu ne s'affiche pas.
+                {
+                    Clear();
+                    WriteLine("Merci de contrôler les valeurs du tableau de jeu!");
+                    break;
+                }
 
                 ckyKeyPress = ReadKey(); // Connaître la touche joué par le joueur.
 
@@ -120,7 +131,7 @@ namespace x_403_lovink_mark_Projet
                 if (ckyKeyPress.Key == ConsoleKey.Enter) // Rentre dans la boucle si la touche "entrer" à été joué. 
                 {
                     possibilities = 0; // A chauqe coup remettre les possibilités à zéro.
-                    
+
                     for (int i = 0; i < column; i++) // Parcour le tableau à 2 dimensions pour pouvoir y placer des valeurs afin de pouvoir jouer au jeu.
                     {
                         for (int j = 0; j < row; j++)
@@ -209,20 +220,20 @@ namespace x_403_lovink_mark_Projet
                         }
                     }
 
-                    for (int i = 0; i < column; i++) 
+                    for (int i = 0; i < column; i++)
                     {
                         for (int j = 0; j < row; j++)
                         {
-                             if (tabsGames[intPosRow, intPosCol] == 1) // Transforme la valeur "1" en "4" dans le tableau à 2 dimensions à la fin de l'affichage complet du tableau à 2 dimensions.
-                              tabsGames[intPosRow, intPosCol] = 4;
+                            if (tabsGames[intPosRow, intPosCol] == 1) // Transforme la valeur "1" en "4" dans le tableau à 2 dimensions à la fin de l'affichage complet du tableau à 2 dimensions.
+                                tabsGames[intPosRow, intPosCol] = 4;
                         }
                     }
 
                     if (score == row * column * 100 - 100) // Savoir si le joueur à gagner / s'il a le nombre de points max.
                         win = true;
 
-                    SetCursorPosition(leftCursor + 5 * row + 10, topCursor + 10); // Affiche le score du joueur à chauqe tour.
-                    WriteLine("vous avez : " + score);
+                    SetCursorPosition(leftCursor + 5 * (column + 5), topCursor + 10); // Affiche le score du joueur à chauqe tour.
+                    WriteLine("Vous avez : " + score);
                 }
 
                 if (win) // Si le joueur gagne le félicité
@@ -232,7 +243,7 @@ namespace x_403_lovink_mark_Projet
                     WriteLine("Bravo vous avez gagné avec : " + score + " points");
                     do
                     {
-                        
+
                         Write("Jouer à nouveau ? (o/n) : ");
                         gameOn = char.Parse(ReadLine());
                         if (gameOn == 'o' || gameOn == 'O') // Savoir si le joueur veut recommencer.
@@ -252,11 +263,11 @@ namespace x_403_lovink_mark_Projet
                         {
                             WriteLine("Merci de choisir la bonne lettre");
                         }
-                        
+
                     } while (gameOn != 'o' && gameOn != 'O' && gameOn != 'n' && gameOn != 'N'); //Demande si le joeur veut rejouer tant qu'il n'a pas correctement répondu.
                     continue;
                 }
-                
+
                 if (lost)
                 {
                     Clear();
@@ -264,12 +275,12 @@ namespace x_403_lovink_mark_Projet
                     WriteLine("Dommage vous avez perdu avec : " + score + " points sur " + (row * column * 100 - 100) + " points");
                     do
                     {
-                        
+
                         Write("Jouer à nouveau ? (o/n) : ");
                         gameOn = char.Parse(ReadLine());
-                        
-                        
-                        
+
+
+
                         if (gameOn == 'o' || gameOn == 'O')
                         {
                             lost = false;
@@ -289,10 +300,11 @@ namespace x_403_lovink_mark_Projet
                             win = true;
                         }
                     } while (gameOn != 'o' && gameOn != 'O' && gameOn != 'n' && gameOn != 'N'); //Demande si le joeur veut rejouer tant qu'il n'a pas correctement répondu.
-                 }
+                }
 
 
-            } while (ckyKeyPress.Key != ConsoleKey.Escape && lost!=true && win!=true ); // Faire la boucle du jeu tant que le joueur n'a pas perdu ou veut arrêter. 
+
+            } while (ckyKeyPress.Key != ConsoleKey.Escape && lost != true && win != true && gameStart != false); // Faire la boucle du jeu tant que le joueur n'a pas perdu ou veut arrêter. 
         }
         /// <summary>
         /// La méthode doit afficher le tableau de jeu grâce au valeur de row et de column
@@ -301,11 +313,11 @@ namespace x_403_lovink_mark_Projet
         /// <param name="topCursor">constante pour commencé d'une valeur depuis le haut de la console</param>
         /// <param name="row">valeur pour le nombre de ligne du design graphique du jeu</param>
         /// <param name="column">valeur pour le nombre de colonne du design graphique du jeu</param>
-        static void Tableau(int row, int column, int topCursor, int leftCursor)
+        static void GameField(int row, int column, int topCursor, int leftCursor)
         {
-            for (int j = 0; j < column && column < 26; j++)
+            for (int j = 0; j < column && column <= 26; j++)
             {
-                for (int i = 0; i < row && row < 20; i++)
+                for (int i = 0; i < row && row <= 20; i++)
                 {
 
                     SetCursorPosition((j * 5) + leftCursor, (i * 3) + topCursor);
@@ -330,33 +342,31 @@ namespace x_403_lovink_mark_Projet
         /// <param name="topCursor">constante pour commencé d'une valeur depuis le haut de la console</param>
         /// <param name="row">valeur pour le nombre de ligne du design graphique du jeu</param>
         /// <param name="column">valeur pour le nombre de colonne du design graphique du jeu</param>
-        /// <param name="posLetter">valeur modifiable pour la position des lettres autour de la table de jeu</param>
-        /// <param name="posNumber">valeur modifiable pour la position des nombre autour de la table de jeu</param>
-        static void Alphabet(int posLetter, int posNumber, int column, int row, int leftCursor, int topCursor)
+        /// <param name="posLeftLetNum">valeur modifiable pour la position des lettres autour de la table de jeu</param>
+        /// <param name="posTopLetNum">valeur modifiable pour la position des nombre autour de la table de jeu</param>
+        static void Alphabet(int posLeftLetNum, int posTopLetNum, int column, int row, int leftCursor, int topCursor)
         {
-            for (int a = 64; a <= column + 64 && column<26; a++)
+            for (int a = 64; a <= column + 64 && column <= 26; a++)
             {
 
                 WriteLine((char)a);
-                SetCursorPosition(posLetter + 2, posNumber - 1);
-                posLetter += 5;
+                SetCursorPosition(posLeftLetNum + 2, posTopLetNum - 1);
+                posLeftLetNum += 5;
 
             }
 
-            posLetter = leftCursor;
-            posNumber = topCursor;
+            posLeftLetNum = leftCursor; // Remettre les valeurs à leurs valeurs initiale.
+            posTopLetNum = topCursor; // Remettre les valeurs à leurs valeurs initiale.
 
 
-            SetCursorPosition(posLetter - 2, posNumber + 1);
-            for (int a = 1; a < row + 1 && row < 20; a++)
+            SetCursorPosition(posLeftLetNum - 3, posTopLetNum - 2 + row * 3);
+            for (int a = 1; a < row + 1 && row <= 20; a++)
             {
 
 
-
-
                 WriteLine(a);
-                SetCursorPosition(posLetter - 2, posNumber + 4);
-                posNumber += 3;
+                SetCursorPosition(posLeftLetNum - 3, posTopLetNum - 5 + row * 3);
+                posTopLetNum -= 3;
 
 
             }
@@ -365,12 +375,12 @@ namespace x_403_lovink_mark_Projet
         /// <summary>
         /// La méthode doit afficher le titre du jeu
         /// </summary>
-        static void Titre()
+        static void GameTitle()
         {
             SetCursorPosition(30, 2);
             WriteLine("╔══════════════════════════════════════════════════╗");
             SetCursorPosition(30, 3);
-            WriteLine("║ETML - le problème du cavalier - MLK - v1.0 - 2021║");
+            WriteLine("║ETML - Le problème du cavalier - MLK - v1.0 - 2021║");
             SetCursorPosition(30, 4);
             WriteLine("╚══════════════════════════════════════════════════╝");
 
@@ -382,30 +392,31 @@ namespace x_403_lovink_mark_Projet
         /// <param name="leftCursor">constante pour commencé d'une valeur à gauche de la console</param>
         /// <param name="topCursor">constante pour commencé d'une valeur depuis le haut de la console</param>
         /// <param name="row">valeur pour le nombre de ligne du design graphique du jeu</param>
-        static void Rules(int leftCursor, int topCursor , int row)
+        static void Rules(int leftCursor, int topCursor, int column)
         {
-            SetCursorPosition(leftCursor +5* row +10 , topCursor );
+            SetCursorPosition(leftCursor + 5 * (column + 5), topCursor);
             WriteLine("Mode d'utilisation :");
-            SetCursorPosition(leftCursor + 5 * row + 10, topCursor+1);
+            SetCursorPosition(leftCursor + 5 * (column + 5), topCursor + 1);
             WriteLine("═══════════════════");
-            SetCursorPosition(leftCursor + 5 * row + 10, topCursor + 2);
+            SetCursorPosition(leftCursor + 5 * (column + 5), topCursor + 2);
             Write("Déplacement");
-            SetCursorPosition(leftCursor + 5 * row + 29, topCursor + 2);
+            SetCursorPosition(leftCursor + 5 * (column + 5) + 19, topCursor + 2);
             WriteLine("Touches directionnelles");
-            SetCursorPosition(leftCursor + 5 * row + 10, topCursor + 3);
+            SetCursorPosition(leftCursor + 5 * (column + 5), topCursor + 3);
             Write("Jouer");
-            SetCursorPosition(leftCursor + 5 * row + 29, topCursor + 3);
+            SetCursorPosition(leftCursor + 5 * (column + 5) + 19, topCursor + 3);
             WriteLine("Enter");
-            SetCursorPosition(leftCursor + 5 * row + 10, topCursor + 4);
+            SetCursorPosition(leftCursor + 5 * (column + 5), topCursor + 4);
             Write("Quitter");
-            SetCursorPosition(leftCursor + 5 * row + 29, topCursor + 4);
+            SetCursorPosition(leftCursor + 5 * (column + 5) + 19, topCursor + 4);
             WriteLine("Escape");
-            SetCursorPosition(leftCursor + 5 * row + 10, topCursor+8);
+            SetCursorPosition(leftCursor + 5 * (column + 5), topCursor + 8);
             WriteLine("Score :");
-            SetCursorPosition(leftCursor + 5 * row + 10, topCursor + 9);
+            SetCursorPosition(leftCursor + 5 * (column + 5), topCursor + 9);
             WriteLine("═══════════════════");
-            
+
+
 
         }
     }
-}
+}                                                                                       //XIX
